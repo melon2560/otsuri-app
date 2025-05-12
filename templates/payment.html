@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>支払い画面</title>
+    <!-- Bootstrap CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container my-5">
+
+    <h1 class="text-center mb-4">支払い画面</h1>
+    <div class="mb-3 text-end">
+        <a href="/" class="btn btn-secondary">戻る</a>
+    </div>
+
+    <div class="card mb-4 p-3">
+        <h5>購入金額: <strong>{{ price }}円</strong></h5>
+
+        {% if error %}
+            <div class="alert alert-danger mt-2">{{ error }}</div>
+        {% endif %}
+    </div>
+
+    <div class="card mb-4 p-3">
+        <h4>あなたの手持ち</h4>
+        <form method="POST">
+
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" name="optimize" id="optimize" checked>
+                <label class="form-check-label" for="optimize">
+                    最適支払い方法を計算する
+                </label>
+            </div>
+
+            <div class="row">
+                {% for coin, max_count in wallet.items() %}
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">{{ coin }}円（所持数：{{ max_count }}）</label>
+                    <input type="number" name="use_{{ coin }}" min="0" max="{{ max_count }}" value="0" class="form-control">
+                </div>
+                {% endfor %}
+            </div>
+            <button type="submit" class="btn btn-primary">支払う</button>
+        </form>
+    </div>
+
+    {% if used_coins %}
+        <div class="card mb-4 p-3">
+            <h4>あなたが支払った構成</h4>
+            <ul class="list-group">
+                {% for coin, count in used_coins.items() %}
+                    <li class="list-group-item">{{ coin }}円: {{ count }}枚</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    {% if payment_amount > 0 %}
+    <div class="card mb-4 p-3">
+        <h5>支払金額: <strong>{{ payment_amount }}円</strong></h5>
+    </div>
+    {% endif %}
+
+    {% if change is not none %}
+    <div class="card mb-4 p-3">
+        <h5>お釣り: <strong>{{ change }}円</strong></h5>
+    </div>
+    {% endif %}
+
+    {% if breakdown is not none %}
+    <div class="card mb-4 p-3">
+        <h4>おつりの構成</h4>
+        <ul class="list-group">
+            {% for denomination, count in breakdown.items() %}
+                <li class="list-group-item">{{ denomination }}円: {{ count }}枚</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    {% if optimal_payment %}
+        <div class="card mb-4 p-3">
+            <h4>最適な支払い方法（支払い＋お釣りの総枚数: {{ best_total_cost }} 枚）</h4>
+            <ul class="list-group mb-2">
+                {% for coin, count in optimal_payment.items() if count > 0 %}
+                    <li class="list-group-item">{{ coin }}円: {{ count }}枚</li>
+                {% endfor %}
+            </ul>
+            <p>▶ 最適支払い金額合計: <strong>{{ optimal_payment_amount }}円</strong></p>
+            <p>▶ 最適支払後のおつり: <strong>{{ optimal_change }}円</strong></p>
+        </div>
+    {% endif %}
+
+    {% if elapsed_time %}
+    <div class="card mb-4 p-3">
+        <h4>あなたの支払い時間: <strong>{{ elapsed_time }}秒</strong></h4>
+    </div>
+    {% endif %}
+
+    {% if score_total is not none %}
+    <div class="card mb-4 p-3">
+        <h4>支払い評価スコア</h4>
+        <p class="mb-2">総合スコア: <strong>{{ score_total }} / 100点</strong></p>
+        <ul class="list-group">
+            {% for label, score in score_detail.items() %}
+                <li class="list-group-item">{{ label }}: {{ score }}点</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+</div>
+</body>
+</html>

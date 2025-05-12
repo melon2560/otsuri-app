@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>モード選択</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container my-5">
+    <h1 class="text-center mb-4">モード選択</h1>
+
+    <div class="d-grid gap-3 col-6 mx-auto">
+        <form action="/mode" method="POST">
+            <input type="hidden" name="mode" value="balance">
+            <button class="btn btn-primary">バランスモード</button>
+        </form>
+        <form action="/mode" method="POST">
+            <input type="hidden" name="mode" value="coins">
+            <button class="btn btn-warning">小銭モード</button>
+        </form>
+        <form action="/mode" method="POST">
+            <input type="hidden" name="mode" value="random">
+            <button class="btn btn-success">ランダムモード</button>
+        </form>
+
+        <p class="text-muted mt-3">
+            <strong>各モードの仕様</strong>
+            <ul>
+                <li><strong>バランスモード：</strong>紙幣・硬貨がバランスよく配られた基本モードです。</li><br>
+                <li><strong>小銭モード：</strong>小銭のみで構成されたモードです（最大支払可能額：<strong>1980円</strong>）。</li><br>
+                <li><strong>ランダムモード：</strong>ランダムな手持ちで挑戦。状況によっては制限のある構成になります。</li>
+            </ul>
+        </p>
+    </div>
+</div>
+</body>
+</html>
